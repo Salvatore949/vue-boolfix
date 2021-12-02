@@ -2,14 +2,15 @@
   <div>
     <header>
         <h1>BOOLFLIX</h1>
-        <input type="text" id="choose" placeholder="HarryPotter">
+        <input type="text" id="choose" placeholder="HarryPotter" v-model.trim="searchText">
+        <button @click.prevent="searching">Search</button>
     </header>
     <div>
-    <Cards
-    v-for="film in results"
-    :key="film.id"
-    :details="film"
-    />      
+      <Cards
+        v-for="film in results"
+        :key="film.id"
+        :details="film"
+      />      
     </div>
   </div>  
 </template>
@@ -25,26 +26,24 @@ export default {
   },
   data(){
     return{
-      apiUrl: "https://api.themoviedb.org/3/search/movie?api_key=c53a2a603471b7e3608f9dee04a90392&query=harry+potter",
-      "page": 1,
-      "results": [],
-      "total_pages": 2,
-      "total_results": 25
-      }
-    },
-    created(){
-      this.getCharacters();
-    },
-    methods: {
-      getCharacters(){
+      apiUrl: "https://api.themoviedb.org/3/search/movie?api_key=c53a2a603471b7e3608f9dee04a90392&query=",
+      results: [],
+      searchText:"",
+    }
+  },
+  methods: {
+    getMovies(){
       axios
-      .get(this.apiUrl)
-      .then((result)=>{
-        this.results = result.data;
+      .get(this.apiUrl+this.searchText)
+      .then((result) => {
+        this.results = result.data.results;
       })
-      }
+    },
+    searching(){
+      this.getMovies();
     }
   }
+}
 </script>
 
 <style>
