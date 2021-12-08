@@ -2,10 +2,12 @@
   <div>
     <header>
         <h1>BOOLFLIX</h1>
-        <input type="text" id="choose" placeholder="HarryPotter" v-model.trim="searchText">
-        <button @click.prevent="searching">Search</button>
+        <div>
+          <input type="text" id="choose" placeholder="Insert" v-model.trim="searchText">
+          <button id="botton" @click.prevent="searching">Search</button>
+        </div>
     </header>
-    <div>
+    <div id="back">
       <Cards
         v-for="film in results"
         :key="film.id"
@@ -27,7 +29,9 @@ export default {
   data(){
     return{
       apiUrl: "https://api.themoviedb.org/3/search/movie?api_key=c53a2a603471b7e3608f9dee04a90392&query=",
+      apiUrlserie:"https://api.themoviedb.org/3/search/tv?api_key=c53a2a603471b7e3608f9dee04a90392&language=it_IT&query=",
       results: [],
+      serie: [],
       searchText:"",
     }
   },
@@ -39,31 +43,55 @@ export default {
         this.results = result.data.results;
       })
     },
+    getSeries(){
+      axios
+      .get(this.apiUrlserie+this.searchText)
+      .then((result) => {
+        this.serie = result.data.results;
+      })
+    },
     searching(){
       this.getMovies();
+      this.getSeries();
     }
   }
-}
+
+  }
 </script>
 
 <style>
-  header{
-      background-color: black;
-      color: red;
-      display: flex;
-      justify-content: space-between;
-      height: 8vh;
-    }
+*{
+  margin: 0;
+  padding: 0;
+}
 
-    header h1{
-        font-size:25px;
-        padding-left: 50px;
-    }
+header{
+  display: flex;
+  justify-content: space-between;
+  background-color: black;
+  padding: 5px 20px;
 
-    #choose{
-        height: 30px;
-        display: flex;
-        margin-top: 10px;
-        margin-right:50px ;
-    }
+}
+
+h1{
+  color: red;
+  margin:30px 0;  
+}
+
+#choose{
+  height: 30px;
+  margin:30px 0;
+
+}
+
+#botton{
+  height: 30px;
+  margin-left: 20px;  
+}
+
+#back{
+  background-color: rgb(71, 70, 70);
+  display: flex;
+  flex-wrap: wrap;
+}
 </style>
